@@ -86,20 +86,15 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # allauth authentication settings
-# Authentication method using either username or email
+# Authentication method using either usernames or emails
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-# email required to register
+# Email is required to 
 ACCOUNT_EMAIL_REQUIRED = True
-# Email verification required to register
 ACCOUNT_EMAIL_VERIFICATION='mandatory'
-# Users must enter email twice on registration page to ensure no typos
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
-# Username must be at least 4 characters long
 ACCOUNT_USERNAME_MIN_LENGTH = 4
-# Login URL
 LOGIN_URL = '/accounts/login/'
-# URL redirect after successfully logging in
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/success'
 
 WSGI_APPLICATION = 'boutique_ado.wsgi.application'
 
