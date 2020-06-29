@@ -14,9 +14,32 @@ def all_products(request):
     products = Product.objects.all()
     query = None
     categories = None
+    sort = None
+    direction = None
     
     # If search form submits GET request
     if request.GET:
+        
+        # Check if sort parameter in url get request
+        if 'sort' in request.GET:
+            # Set sortkey var to sort parameter value
+            sortkey = request.GET['sort']
+            # Set sort var = sortkey to preserve parameter value
+            sort = sortkey
+            # If user is sorting by name field
+            if sortkey == 'name':
+                # Set sortkey = new annotated field lower_name
+                sortkey = 'lower_name'
+                # Annotate current list of products with new field(lower_name) and set products = lower_case (the lowercase version of the 'name' field)
+                products = products.annotate(lower_name=Lower('name'))
+            # Check if direction parameter defined
+            if 'direction' in request.GET:
+                # Get direction value
+                direction = request.GET['direction']
+                # If direction is descending, reverse the order of the sortkey
+                if direction == 'desc':
+                    sortkey = f'-{sortkey}'
+            products = products.order_by(sortkey)
         
         # Check if category is in request URL
         if 'category' in request.GET:
@@ -43,10 +66,14 @@ def all_products(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = products.filter(queries)
     
+    
+    current_sorting = f'{sort}_{direction}'
+    
     context = {
         'products': products,
         'search_term': query,
         'current_categories': categories,
+        'current_sorting': current_sorting,
     }
     
     return render(request, 'products/products.html', context)
