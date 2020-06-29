@@ -76,6 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',   # Required by allauth - Allows allauth and django to access http request object in templates
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Allows us to access the bag contents in any template on the site without having to return them from different views
+                'bag.contexts.bag_contents',
             ],
         },
     },
@@ -166,3 +168,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 # Tells Django where the media files are located
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Free delivery variable
+FREE_DELIVERY_THRESHOLD = 50
+STANDARD_DELIVERY_PERCENTAGE = 10
