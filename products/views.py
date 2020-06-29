@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
-from .models import Product, Category
 # Used to generate search query (allows use of or functionality in DB filtering)
 from django.db.models import Q
+from django.db.models.functions import Lower
+
+# Local imports
+from .models import Product, Category
 
 
 # Create your views here.
