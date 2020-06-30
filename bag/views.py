@@ -28,7 +28,5 @@ def add_to_bag(request, item_id):
     # Overwrite the bag session variable with the updated version
     request.session['bag'] = bag
     
-    print(request.session['bag'])
-    
-    # Redirect to item page
+    # Redirect to current product item page
     return redirect(redirect_url)

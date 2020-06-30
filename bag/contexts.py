@@ -2,6 +2,8 @@
 # Decimal is preffered when working with money because it is more accurate
 from decimal import Decimal
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from products.models import Product
 
 
 def bag_contents(request):
@@ -9,6 +11,23 @@ def bag_contents(request):
     bag_items = []
     total = 0
     product_count = 0
+    # Get bag session variable if it exists, else initialize it
+    bag = request.session.get('bag', {})
+    
+    # Iterate through item_id's and their quantities in bag (from bag session variable)
+    for item_id, quantity in bag.items():
+        # Get product
+        product = get_object_or_404(Product, pk=item_id)
+        # Add cost of item times its quantity to the total
+        total += quantity * product.price
+        # Increment thr product count by the quantity of the current iteration item
+        product_count += quantity
+        # Dict of item id, quantity, and product object
+        bag_items.append({
+            'item_id': item_id,
+            'quantity': quantity,
+            'product': product,
+        })
     
     if total < settings.FREE_DELIVERY_THRESHOLD:
         delivery = total * Decimal(settings.STANDARD_DELIVERY_PERCENTAGE / 100)
