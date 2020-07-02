@@ -1,0 +1,65 @@
+<script type="text/javascript">
+
+function handelEnableDisable(itemId) {
+    // Get value of quantity input box on product_detail page
+    var currentValue = parseInt($(`#id_qty_${itemId}`).val());
+    // Min and max values for buttons to be disabled at (booleans)
+    var minusDisabled = currentValue < 2;
+    var plusDisabled = currentValue > 98;
+    // Disable buttons based on min and max values
+    $(`#decrement-qty_${itemId}`).prop('disabled', minusDisabled);
+    $(`#increment-qty_${itemId}`).prop('disabled', plusDisabled);
+    
+}
+
+// Initially set buttons to enabled/disabled based on quantity input value
+var allQtyInputs = $('.qty_input');
+for(var i = 0; i < allQtyInputs.length; i++){
+    var itemId = $(allQtyInputs[i]).data('item_id');
+    handelEnableDisable(itemId);
+}
+
+// Add event listener to enable/disable buttons whenever the value in the quantity input changes
+$('.qty_input').change(function() {
+    var itemId = $(this).data('item_id');
+    handelEnableDisable(itemId)
+})
+
+// Increment Quantity
+    // Find increment-qty class button                                                                      
+    $('.increment-qty').click(function(e) {
+        // Prevent default button action
+        e.preventDefault();
+        // Find closest input box - Find closest input-group class >> find all qty_input class elements inside input-group >> select first qty_input class element in list
+        // closest() method searches up the DOM
+        // find() method searches down the DOM
+        var closestInput = $(this).closest('.input-group ').find('.qty_input')[0];
+        // Save value inside qty_input in variable
+        var currentValue = parseInt($(closestInput).val());
+        // Set value of qty_input equal to the current val + 1
+        $(closestInput).val(currentValue + 1);
+        // Get item id from data-item_id attribute on the button element
+        var itemId = $(this).data('item_id');
+        // Call function to enable/disable button based on min and max quantities
+        handelEnableDisable(itemId);
+    });
+    
+// Decrement Quantity
+    // Find decrement-qty class button                                                                      
+    $('.decrement-qty').click(function(e) {
+        // Prevent default button action
+        e.preventDefault();
+        // Find closest input box - Find closest input-group class >> find all qty_input class elements inside input-group >> select first qty_input class element in list
+        // closest() method searches up the DOM
+        // find() method searches down the DOM
+        var closestInput = $(this).closest('.input-group').find('.qty_input')[0]
+        // Save value inside qty_input in variable
+        var currentValue = parseInt($(closestInput).val());
+        // Set value of qty_input equal to the current val + 1
+        $(closestInput).val(currentValue - 1);
+        // Get item id from data-item_id attribute on the button element
+        var itemId = $(this).data('item_id');
+        // Call function to enable/disable button based on min and max quantities
+        handelEnableDisable(itemId);
+    });
+</script>

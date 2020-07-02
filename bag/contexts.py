@@ -15,19 +15,35 @@ def bag_contents(request):
     bag = request.session.get('bag', {})
     
     # Iterate through item_id's and their quantities in bag (from bag session variable)
-    for item_id, quantity in bag.items():
-        # Get product
-        product = get_object_or_404(Product, pk=item_id)
-        # Add cost of item times its quantity to the total
-        total += quantity * product.price
-        # Increment thr product count by the quantity of the current iteration item
-        product_count += quantity
-        # Dict of item id, quantity, and product object
-        bag_items.append({
-            'item_id': item_id,
-            'quantity': quantity,
-            'product': product,
-        })
+    for item_id, item_data in bag.items():
+        # If item_data is an integer, item_data is the quantity of the item
+        if isinstance(item_data, int):
+            # Get product
+            product = get_object_or_404(Product, pk=item_id)
+            # Add cost of item times its quantity to the total
+            total += item_data * product.price
+            # Increment thr product count by the quantity of the current iteration item
+            product_count += item_data
+            # Dict of item id, quantity, and product object
+            bag_items.append({
+                'item_id': item_id,
+                'quantity': item_data,
+                'product': product,
+            })
+        # If item_data is not an int, it is a dictionary
+        else:
+            # Iterate through items inner dictionary (item_data)
+            for size, quantity in item_data['items_by_size'].items():
+                # Get product
+                product = get_object_or_404(Product, pk=item_id)
+                total += quantity * product.price
+                product_count += quantity
+                bag_items.append({
+                    'item_id': item_id,
+                    'quantity': quantity,
+                    'product': product,
+                    'size': size,
+                })
     
     if total < settings.FREE_DELIVERY_THRESHOLD:
         delivery = total * Decimal(settings.STANDARD_DELIVERY_PERCENTAGE / 100)
