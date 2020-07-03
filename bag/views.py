@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse, HttpResponse
 
 # Create your views here.
 
@@ -50,3 +50,77 @@ def add_to_bag(request, item_id):
     
     # Redirect to current product item page
     return redirect(redirect_url)
+    
+    
+def adjust_bag(request, item_id):
+    """ Adjust the quantity of the specified product to the specified amount """
+    
+    # 'quantity' is the value attribute in the form inputs
+    quantity = int(request.POST.get('quantity'))
+    
+    # Get product size from POST request
+    size = None
+    if 'product_size' in request.POST:
+        size = request.POST['product_size']
+    
+    # Get the bag session variable if it exists, or create it if not
+    bag = request.session.get('bag', {})
+    
+    # If a product with sizes is being adjusted in the bag
+    if size:
+        # If quantity is greater than 0, update quantity = new quantity
+        if quantity > 0:
+            bag[item_id]['items_by_size'][size] = quantity
+        # If quantity is 0, remove item from bag
+        else:
+            del bag[item_id]['items_by_size'][size]
+            # If that is the only size of that item, remove item entirely
+            if not bag[item_id]['items_by_size']:
+                bag.pop(item_id)
+    # If product without sizes is being adjusted in the bag
+    else:
+        # If quantity is greater than 0, update quantity = new quantity
+        if quantity > 0:
+            bag[item_id] = quantity
+        # If quantity is 0, remove item from bag
+        else:
+            bag.pop(item_id)
+    
+    # Overwrite the bag session variable with the updated version
+    request.session['bag'] = bag
+    
+    # Redirect to view_bag view
+    return redirect(reverse('view_bag'))
+    
+    
+def remove_from_bag(request, item_id):
+    """ Remove item from shopping bag """
+    
+    try:
+        # Get product size from POST request
+        size = None
+        if 'product_size' in request.POST:
+            size = request.POST['product_size']
+        
+        # Get the bag session variable if it exists, or create it if not
+        bag = request.session.get('bag', {})
+        
+        # If a product with sizes is being adjusted in the bag
+        if size:
+            # Delete that size item from bag
+            del bag[item_id]['items_by_size'][size]
+            # If that is the only size of that item, remove item entirely
+            if not bag[item_id]['items_by_size']:
+                bag.pop(item_id)
+        # If product without sizes is being removed, simply remove the item
+        else:
+            bag.pop(item_id)
+        
+        # Overwrite the bag session variable with the updated version
+        request.session['bag'] = bag
+        
+        # Since this view will be posted to by a JS function, return a 200 HTTP response implying item was successfully removed
+        return HttpResponse(status=200)
+    # If exception occurs, return a 500 http error response
+    except Exception as e:
+        return HttpResponse(status=500)

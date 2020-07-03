@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+<!-- Load custom template tages and filters from bag_tool.py -->
+{% load bag_tools %}
 
 {% block page_header %}
     <div class="conainer header-container">
@@ -51,7 +53,7 @@
                                         <p class="my-0">${{ item.product.price }}</p>
                                     </td>
                                     <td class="py-3 w-25">
-                                        <form method='POST' action="" class="form update-form">
+                                        <form method='POST' action="{% url 'adjust_bag' item.item_id %}" class="form update-form">
                                             {% csrf_token %}
                                             
                                             <div class="form-group">
@@ -85,11 +87,11 @@
                                         </form>
                                         
                                         <a class="update-link text-info"><small>Update</small></a>
-                                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-size="{{ item.size }}"><small>Remove</small></a>
+                                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-product_size="{{ item.size }}"><small>Remove</small></a>
                                         
                                     </td>
                                     <td class="py-3">
-                                        <p class="my-0">${{ item.product.price }}</p>
+                                        <p class="my-0">${{ item.product.price | calc_subtotal:item.quantity }}</p>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -159,11 +161,11 @@
         // Get item id from splitting elements id attribute
         var itemId = $(this).attr('id').split('remove_')[1];
         // Get size from the data-size attribute
-        var size = $(this).data('size');
+        var size = $(this).data('product_size');
         // URL for submitting
-        var url = `/bag/remove/${itemId}`;
+        var url = `/bag/remove/${itemId}/`;
         // Object used to send data to DB
-        var data = {'csrfmiddlewaretoken': csrfToken, 'size': size};
+        var data = {'csrfmiddlewaretoken': csrfToken, 'product_size': size};
         
         // Post data to server using url and data as arguments. Reload page when done
         $.post(url, data)
