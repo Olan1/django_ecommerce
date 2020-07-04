@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
+from django.contrib import messages
+
+from products.models import Product
 
 # Create your views here.
 
@@ -10,6 +13,9 @@ def view_bag(request):
     
 def add_to_bag(request, item_id):
     """ Add a quantity of the specified product to the shopping bag """
+    
+    # Get product
+    product = Product.objects.get(pk=item_id)
     
     # 'quantity' and 'redirect_url' are the value attributes in the form inputs
     quantity = int(request.POST.get('quantity'))
@@ -44,6 +50,8 @@ def add_to_bag(request, item_id):
         # If item not already in bag, create it with value = quantity
         else:
             bag[item_id] = quantity
+            # Add success message
+            messages.success(request, f'Added {product.name} to your bag')
     
     # Overwrite the bag session variable with the updated version
     request.session['bag'] = bag
