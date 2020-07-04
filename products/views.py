@@ -68,6 +68,7 @@ def all_products(request):
             query = request.GET['q']
             # If search input (q) is blank
             if not query:
+                # Add error message if user submits search without search criteria
                 messages.error(request, "You didn't enter any search criteria")
                 # Redirect to products url
                 return redirect(reverse('products'))
