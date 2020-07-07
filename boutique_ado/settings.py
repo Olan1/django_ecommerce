@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     
+    # Other
+    'crispy_forms',
+    
     # My apps
     'home',
     'products',
@@ -63,6 +66,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'boutique_ado.urls'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,9 +82,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',   # Required by allauth - Allows allauth and django to access http request object in templates
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
                 # Allows us to access the bag contents in any template on the site without having to return them from different views
                 'bag.contexts.bag_contents',
             ],
+            'builtins': [
+                    'crispy_forms.templatetags.crispy_forms_tags',
+                    'crispy_forms.templatetags.crispy_forms_field',
+                ]
         },
     },
 ]
