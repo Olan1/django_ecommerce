@@ -25,7 +25,8 @@ SECRET_KEY = 'xbl)eat0czz!46fv9g^&8u@o)#zcn6odga84^%=&$#4l$kt)pa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('DEV_ENV')]
+ALLOWED_HOSTS = [os.environ.get('DEV_ENV'),
+                'https://dashboard.stripe.com/test/webhooks/we_1H31CjKmCL1maIwKu9Ip3Jsp']
 
 
 # Application definition
@@ -188,3 +189,4 @@ STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
+STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
