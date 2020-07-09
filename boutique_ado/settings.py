@@ -25,8 +25,7 @@ SECRET_KEY = 'xbl)eat0czz!46fv9g^&8u@o)#zcn6odga84^%=&$#4l$kt)pa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('DEV_ENV'),
-                'https://dashboard.stripe.com/test/webhooks/we_1H31CjKmCL1maIwKu9Ip3Jsp']
+ALLOWED_HOSTS = [os.environ.get('DEV_ENV'),]
 
 
 # Application definition
@@ -177,6 +176,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # Tells Django where the statcic files are located - Has to be a tuple
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
