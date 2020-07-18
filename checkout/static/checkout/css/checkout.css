@@ -36,6 +36,16 @@ stripe-style-input: input {
     border: 1px solid #000;
 }
 
+select,
+select option {
+  color: #000000;
+}
+
+select:invalid,
+select option[value=""] {
+  color: #7d858c !important;
+}
+
 #loading-overlay {
   display: none;
   position: fixed;

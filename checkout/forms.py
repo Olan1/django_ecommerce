@@ -27,27 +27,27 @@ class OrderForm(forms.ModelForm):
             'full_name': 'Full Name',
             'email': 'Email Address',
             'phone_number': 'Phone Number',
-            'country': 'Country',
             'postcode': 'Postal Code',
             'town_or_city': 'Town or City',
             'street_address1': 'Street Address 1',
             'street_address2': 'Street Address 2',
-            'county': 'County',
+            'county': 'County, State or Locality',
         }
         
         # Autofocus on full_name field (cursor starts in full_name field when page is loaded)
         self.fields['full_name'].widget.attrs['autofocus'] = True
         # Iterate through form fields
         for field in self.fields:
-            # If field is required, set placeholder to field from dict and add a star to placeholder
-            if self.fields[field].required:
-                placeholder = f'{placeholders[field]} *'
-            # If field not required, set placeholder field from dict without star
-            else:
-                placeholder = placeholders[field]
-                
-            # Set placeholder values to their corresponding values in the dict above
-            self.fields[field].widget.attrs['placeholder'] = placeholder
+            if field != 'country':
+                # If field is required, set placeholder to field from dict and add a star to placeholder
+                if self.fields[field].required:
+                    placeholder = f'{placeholders[field]} *'
+                # If field not required, set placeholder field from dict without star
+                else:
+                    placeholder = placeholders[field]
+                    
+                # Set placeholder values to their corresponding values in the dict above
+                self.fields[field].widget.attrs['placeholder'] = placeholder
             # Assign css class attribute value
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
             # Remove form field labels
